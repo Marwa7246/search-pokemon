@@ -14,6 +14,7 @@ import axios from 'axios';
 import pokemon from 'pokemon';
 
 import Pokemon from "./components/Pokemon";
+const POKE_API_BASE_URL = 'https://pokeapi.co/api/v2';
 
 
 export default class Main extends Component {
@@ -39,7 +40,7 @@ export default class Main extends Component {
                 style={styles.textInput}
                 onChangeText={(searchInput) => this.setState({ searchInput })}
                 value={this.state.searchInput}
-                placeholder="Search Pokémon"
+                placeholder="Search Pokémon ID"
               />
             </View>
             <View style={styles.buttonContainer}>
@@ -62,7 +63,49 @@ export default class Main extends Component {
       </SafeAreaView>
     );  
   }
-}
+  searchPokemon = async () => {
+    try {
+      const pokemonID = this.state.searchInput; // check if the entered Pokémon name is valid
+
+      this.setState({
+        isLoading: true, // show the loader while request is being performed
+      });
+
+      const { data: pokemonData } = await axios.get(
+        `${POKE_API_BASE_URL}/pokemon/${pokemonID}`
+      );
+      const { data: pokemonSpecieData } = await axios.get(
+        `${POKE_API_BASE_URL}/pokemon-species/${pokemonID}`
+      );
+
+      const { name, sprites, types } = pokemonData;
+      const { flavor_text_entries } = pokemonSpecieData;
+
+      this.setState({
+        name,
+        pic: sprites.front_default,
+        types: this.getTypes(types),
+        desc: this.getDescription(flavor_text_entries),
+        isLoading: false, // hide loader
+      });
+    } catch (err) {
+      console.log(err)
+      Alert.alert('Error', 'Pokémon not found');
+      this.setState({isLoading: false, });// hide loader
+
+    }
+  };
+  getTypes = (types) =>
+  types.map(({ slot, type }) => ({
+    id: slot,
+    name: type.name,
+  }));
+  getDescription = (entries) =>
+    entries.find((item) => item.language.name === 'en').flavor_text;
+}  
+
+
+
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
