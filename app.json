@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RNPokeSearch",
-    "slug": "RNPokeSearch",
+    "name": "Pokemon Search",
+    "slug": "Pokemon-Search",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,11 +17,15 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.poke.pokemonsearch",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
+        "package": "com.poke.pokemonsearch",
+        "versionCode": 1,
         "backgroundColor": "#FFFFFF"
       }
     },
