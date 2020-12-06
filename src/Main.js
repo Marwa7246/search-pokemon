@@ -11,11 +11,10 @@ import {
 } from 'react-native';
 
 import axios from 'axios';
-import pokemon from 'pokemon';
+import pokemonObject from 'pokemon';
 
 import Pokemon from "./components/Pokemon";
 const POKE_API_BASE_URL = 'https://pokeapi.co/api/v2';
-
 
 export default class Main extends Component {
   constructor(props) {
@@ -30,7 +29,7 @@ export default class Main extends Component {
     
   }
   render() {
-    const { name, pic, types, desc, searchInput, isLoading } = this.state;
+    const { name, pic, types, desc, isLoading } = this.state;
     return (
       <SafeAreaView style={styles.wrapper}>
         <View style={styles.container}>
@@ -40,7 +39,7 @@ export default class Main extends Component {
                 style={styles.textInput}
                 onChangeText={(searchInput) => this.setState({ searchInput })}
                 value={this.state.searchInput}
-                placeholder="Search Pokémon ID"
+                placeholder="Search Pokémon (Names start with a capital letter)"
               />
             </View>
             <View style={styles.buttonContainer}>
@@ -65,7 +64,7 @@ export default class Main extends Component {
   }
   searchPokemon = async () => {
     try {
-      const pokemonID = this.state.searchInput; // check if the entered Pokémon name is valid
+      const pokemonID = pokemonObject.getId(this.state.searchInput); // check if the entered Pokémon name is valid
 
       this.setState({
         isLoading: true, // show the loader while request is being performed
@@ -89,10 +88,8 @@ export default class Main extends Component {
         isLoading: false, // hide loader
       });
     } catch (err) {
-      console.log(err)
       Alert.alert('Error', 'Pokémon not found');
       this.setState({isLoading: false, });// hide loader
-
     }
   };
   getTypes = (types) =>
